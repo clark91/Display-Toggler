@@ -22,7 +22,7 @@ monInfos = []
 tk.Label(master=window, text=f"Number of Connected Monitors: {monitorCount}", font = 'Arial 16 bold').pack()
 
 for monitor in screeninfo.get_monitors():
-    tk.Label(master=window, text=monitor, font = 'Arial 10', width=650).pack()
+    tk.Label(master=window, text=f" {monitor}", font = 'Arial 10', width=650).pack()
 
 
 #logic

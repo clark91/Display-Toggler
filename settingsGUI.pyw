@@ -2,9 +2,7 @@ import tkinter as tk
 #from tkinter import ttk
 import ttkbootstrap as ttk
 from functools import partial
-
 import screeninfo
-
 
 
 #window
@@ -20,7 +18,7 @@ title_label.pack()
 #Monitor Object Class
 class monitorInfoBody():
     def __init__(self, array) -> None:
-        self.id = 0 #TEMPORARY FIX THIS YOU BAFFOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOON
+        self.id = 0 
         self.name = array[6][1].replace('\\', '').replace('.', '').replace("'", '')
         self.width = array[2][1]
         self.height = array[3][1]

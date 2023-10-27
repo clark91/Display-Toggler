@@ -2,12 +2,19 @@ import os
 import keyboard
 import time
 import threading
+import subprocess
 
 
 import pystray
 from PIL import Image
 
 showStatus = False
+
+
+
+def readSettings():
+
+    return
 
 #Swticthing Mode
 def switch(status=False):
@@ -25,10 +32,18 @@ def switch(status=False):
         
 
         if (status):
-            os.system("nircmd setdisplay monitor:0 1920 1080 32 144") #Monitor id, width, height, colour depth, refresh rate
+            with open("DefaultSettings.txt", 'r') as f:
+                for line in f.readlines():
+                    os.system(line)
+                    print(line)
+                #os.system("nircmd setdisplay monitor:0 1920 1080 32 144") #Monitor id, width, height, colour depth, refresh rate
             status = False
         else:
-            os.system("nircmd setdisplay monitor:0 2560 1440 32 144")
+            with open("EnabledSettings.txt", 'r') as f:
+                for line in f.readlines():
+                    os.system(line)
+                    print(line)
+                #os.system("nircmd setdisplay monitor:0 2560 1440 32 144")
             status = True
             
         
@@ -40,20 +55,36 @@ def switch(status=False):
         global showStatus
         showStatus = status
         
+optThread = threading.Thread()
+si = subprocess.STARTUPINFO()
+si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+#subprocess.call('taskkill /F /IM exename.exe', startupinfo=si)
 
+    
 
 def after_click(icon, query):
+    global optThread
     if str(query) == "Exit":
         switch(True)
         icon.stop()
-    if str(query) == "Enabled?":
+    if str(query) == "Enable":
         switch()
-        
+    if str(query) == "Settings":
+        try:
+            if (not optThread.is_alive()):
+                
+                subprocess.call('powershell.exe  "py settingsGUI.pyw"', startupinfo=si)
+        except:
+            if(optThread == None):
+                subprocess.call('powershell.exe  "py settingsGUI.pyw"', startupinfo=si)
+                #optThread = threading.Thread(target=os.system, args=("py settingsGUI.pyw",)).start() PREVIOUS METHOD OF INSTANTIATING SETTINGS MENU
+            #return
         
         
 #Tray Icon
 image = Image.open("icon.ico")
-tray = pystray.Icon("DSW", image, "Display Switcher", menu=pystray.Menu(pystray.MenuItem("Enabled?", after_click, checked=lambda MenuItem: showStatus),
+tray = pystray.Icon("DSW", image, "Display Switcher", menu=pystray.Menu(pystray.MenuItem("Enable", after_click, checked=lambda MenuItem: showStatus),
+                                                                        pystray.MenuItem("Settings", after_click),
                                                                         pystray.MenuItem("Exit", after_click)) )
 
 trayThread = threading.Thread(target=tray.run)

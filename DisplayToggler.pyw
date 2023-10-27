@@ -3,18 +3,10 @@ import keyboard
 import time
 import threading
 import subprocess
-
-
 import pystray
 from PIL import Image
 
 showStatus = False
-
-
-
-def readSettings():
-
-    return
 
 #Swticthing Mode
 def switch(status=False):
@@ -99,6 +91,3 @@ while True:
         switch()
         tray.update_menu()
         time.sleep(5)
-
-
-    

@@ -27,7 +27,7 @@ class monitorInfoBody():
         self.widthEntry = None
         self.heightEntry = None
 
-def assignEntries(monitor, widthEntry, heightEntry):
+def assignEntries(monitor, widthEntry, heightEntry): #Assigns each custom display resolution entry to each monitor class
     monitor.widthEntry = widthEntry
     monitor.heightEntry = heightEntry
     return

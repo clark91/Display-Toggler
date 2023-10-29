@@ -4,7 +4,20 @@ import time
 import threading
 import subprocess
 import pystray
+import atexit
 from PIL import Image
+
+def main():
+    while True:
+        time.sleep(0.1)
+        if(not trayThread.is_alive()):
+            quit()
+        if(keyboard.is_pressed("ctrl") and keyboard.is_pressed("shift") and keyboard.is_pressed("p")):
+            print("Switching")
+            switch()
+            tray.update_menu()
+            time.sleep(5)
+
 
 showStatus = False
 
@@ -65,15 +78,16 @@ def after_click(icon, query):
         try:
             if (not optThread.is_alive()):
                 
-                subprocess.call('powershell.exe  "py settingsGUI.pyw"', startupinfo=si)
+                subprocess.Popen('powershell.exe  "py settingsGUI.pyw"', startupinfo=si)
+                print("HELLO??")
         except:
             if(optThread == None):
-                subprocess.call('powershell.exe  "py settingsGUI.pyw"', startupinfo=si)
+                subprocess.Popen('powershell.exe  "py settingsGUI.pyw"', startupinfo=si)
                 #optThread = threading.Thread(target=os.system, args=("py settingsGUI.pyw",)).start() PREVIOUS METHOD OF INSTANTIATING SETTINGS MENU
             #return
         
         
-#Tray Icon
+#Tray Icon----------------
 image = Image.open("icon.ico")
 tray = pystray.Icon("DSW", image, "Display Switcher", menu=pystray.Menu(pystray.MenuItem("Enable", after_click, checked=lambda MenuItem: showStatus),
                                                                         pystray.MenuItem("Settings", after_click),
@@ -81,13 +95,11 @@ tray = pystray.Icon("DSW", image, "Display Switcher", menu=pystray.Menu(pystray.
 
 trayThread = threading.Thread(target=tray.run)
 trayThread.start()
+#--------------------------------------------------
+#Exit Handling
+def atExit():
+    print("AT EXIT FUNCTION CALLED")
+    switch(True)
+atexit.register(atExit)
 
-while True:
-    time.sleep(0.1)
-    if(not trayThread.is_alive()):
-        quit()
-    if(keyboard.is_pressed("ctrl") and keyboard.is_pressed("shift") and keyboard.is_pressed("p")):
-        print("Switching")
-        switch()
-        tray.update_menu()
-        time.sleep(5)
+main()
